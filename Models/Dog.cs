@@ -31,7 +31,6 @@ namespace HundeKennel.Models
         private Owner _owner;
         private List<Dog> _pedigreeTree = new List<Dog>();
 
-        
         // PROPERTIES
         public int DogId
         {
@@ -155,6 +154,53 @@ namespace HundeKennel.Models
         {
             get { return _pedigreeTree; }
             set { _pedigreeTree = value; }
+        }
+        public Dog
+            (
+            int dogId,
+            string? pedigree,
+            string? chip,
+            string? name,
+            string? dadId,
+            string? momId,
+            string? dkkTitles,
+            string? titles,
+            DateTime born,
+            string? hd,
+            string? ad,
+            string? hz,
+            string? sp,
+            char? sex,
+            string? color,
+            bool dead,
+            bool breedingStatus,
+            bool mb,
+            byte[]? image,
+            Owner owner,
+            List<Dog> pedigreeTree
+            )
+        {
+            _dogId = dogId;
+            _pedigree = pedigree;
+            _chip = chip;
+            _name = name;
+            _dadId = dadId;
+            _momId = momId;
+            _dkkTitles = dkkTitles;
+            _titles = titles;
+            _born = born;
+            _hd = hd;
+            _ad = ad;
+            _hz = hz;
+            _sp = sp;
+            _sex = sex;
+            _color = color;
+            _dead = dead;
+            _breedingStatus = breedingStatus;
+            _mb = mb;
+            _image = image;
+            _owner = owner;
+            _pedigreeTree = pedigreeTree;
         }
     }
 }

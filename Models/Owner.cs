@@ -86,5 +86,19 @@ namespace HundeKennel.Models
             private set { _ownedDogs = value; }
 
         }
+        public Owner(int ownerId, string? name, string? address, int zipcode, string? city, string? email, string? phone, string? username, string? password, string? url, List<Dog> ownedDogs)
+        {
+            _ownerId = ownerId;
+            _name = name;
+            _address = address;
+            _zipcode = zipcode;
+            _city = city;
+            _email = email;
+            _phone = phone;
+            _username = username;
+            _password = password;
+            _url = url;
+            _ownedDogs = ownedDogs;
+        }
     }
 }
