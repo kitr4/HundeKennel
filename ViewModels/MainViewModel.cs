@@ -20,22 +20,57 @@ namespace HundeKennel.ViewModels
     public class MainViewModel : INotifyPropertyChanged
     {
         
+        private int _progress;
+        public int Progress
+        {
+            get { return Progress; }
+            set
+            {
+                if(_progress != value)
+                {
+                    _progress = value;
+                    OnPropertyChanged(nameof(Progress));
+                }
+            }
+
+        }
+
+        //INotify interface: 
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        // Interface ended
+
+
         private DogRepository dogRepo = new DogRepository();
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        
         public ObservableCollection<DogViewModel> DogVM { get; set; } = new ObservableCollection<DogViewModel>();
+       
 
         // CONSTRUCTORS
         public MainViewModel()
         {
-            DBHelper.Import();
+            DBHelper.Import(UpdateProgress);
+            
+
+            
             // Property LicenseContext is set to NonCommercial to make it eligible for use.
         }
-        
+        private void UpdateProgress(int progress)
+        {
+            Progress = progress;
+        }
     }
+}
+        
+    
+
 
     
-}
+
 
 
 

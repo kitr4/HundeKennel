@@ -23,7 +23,7 @@ namespace HundeKennel.Services.Helpers
             }
         }
 
-        public static async Task Import()
+        public static async Task Import(Action<int> updateProgress)
         {
             await Task.Run(() =>
             {
