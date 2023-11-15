@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HundeKennel.Services.Helpers
 {
-    internal class DataService
+    public class DataService
     {
         public async Task<IEnumerable<Dog>> LoadDog(string pedigree)
         {

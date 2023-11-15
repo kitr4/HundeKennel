@@ -9,6 +9,8 @@ using HundeKennel.Models;
 using System.Data.SqlClient;
 using OfficeOpenXml;
 using HundeKennel.Services.Helpers;
+using System.Windows.Data;
+using System.Windows.Markup;
 
 
 //tvivlsspørgsmål / diskussion
@@ -19,7 +21,7 @@ namespace HundeKennel.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        
+        public DataService data;
         private double _progress;
         public double dbProgress
         {
@@ -34,6 +36,17 @@ namespace HundeKennel.ViewModels
             }
 
         }
+        private Dog? _selectedDog;
+        public Dog SelectedDog
+        {
+            get { return _selectedDog; }
+            set
+            {
+                _selectedDog = value;
+                OnPropertyChanged(nameof(SelectedDog));
+            }
+        }
+
 
         //INotify interface: 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -42,20 +55,14 @@ namespace HundeKennel.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         // Interface ended
-
-
-        private DogRepository dogRepo = new DogRepository();
-
+        public ObservableCollection<Dog>? Dogs { get; private set; }
         
-        public ObservableCollection<DogViewModel> DogVM { get; set; } = new ObservableCollection<DogViewModel>();
-       
 
         // CONSTRUCTORS
         public MainViewModel()
         {
             DBHelper.Import(UpdateProgress);
 
-            // Property LicenseContext is set to NonCommercial to make it eligible for use.
         }
         private void UpdateProgress(double progress)
         {
@@ -63,9 +70,20 @@ namespace HundeKennel.ViewModels
             {
                 dbProgress = progress;
             });
-            
-
         }
+        public async Task SearchDog(string pedigree)
+        { 
+            var DogFound = await data.LoadDog(pedigree);
+            if (DogFound != null && DogFound.Any())
+            {
+                SelectedDog = DogFound.First(); // Accessing the first element                                  // Now you can use SelectedDog as needed
+            }
+            else
+            {
+                // Handle case when no dogs are found
+            }
+        }
+
     }
 }
         
