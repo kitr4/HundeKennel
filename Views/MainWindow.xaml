@@ -16,16 +16,10 @@
         <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,290,609,10"/>
         <TextBox HorizontalAlignment="Left" Margin="210,131,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="251" Height="19" TextChanged="TextBox_TextChanged"/>
         <Image HorizontalAlignment="Left" Height="91" Margin="72,85,0,0" VerticalAlignment="Top" Width="92" Source="/Views/Logo.png" />
-        <Label Content="{Binding Progress}" HorizontalAlignment="Left" Margin="663,17,0,0" VerticalAlignment="Top" Height="35" Width="107" RenderTransformOrigin="0.5,0.5">
-            <Label.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform AngleX="-4.888"/>
-                    <RotateTransform/>
-                    <TranslateTransform X="-2.908"/>
-                </TransformGroup>
-            </Label.RenderTransform>
-        </Label>
+        <Slider HorizontalAlignment="Left" Margin="12,167,0,0" VerticalAlignment="Top" Width="120" Background="#FF8A8FBD" Value="{Binding dbProgress, Mode=TwoWay}" SmallChange="1"
+        TickFrequency="1"
+        IsSnapToTickEnabled="False" Maximum="100"/>
+        <TextBlock HorizontalAlignment="Left" Margin="23,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Height="34" Width="66" Text="{Binding dbProgress}"/>
 
     </Grid>
 </Window>

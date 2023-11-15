@@ -23,7 +23,7 @@ namespace HundeKennel.Services.Helpers
             }
         }
 
-        public static async Task Import(Action<int> updateProgress)
+        public static async Task Import(Action<double> updateProgress)
         {
             await Task.Run(() =>
             {
@@ -81,9 +81,10 @@ namespace HundeKennel.Services.Helpers
                         // Prepare SQL command with parameters
                         using (SqlCommand cmd = new SqlCommand(sqlInsert, connection))
                         {
-
+                            
                             for (int row = 2; row <= rowCount; row++) // Assuming data starts from row 2 (excluding header)
                             {
+                                
                                 // Set parameters based on your Excel columns
                                 cmd.Parameters.Clear();
                                 byte[] image = Convert.FromBase64String(worksheet.Cells[row, 25].Text);
@@ -134,7 +135,8 @@ namespace HundeKennel.Services.Helpers
                                 cmd.Parameters.AddWithValue("@Image", doghelper.Image);
 
                                 cmd.ExecuteNonQuery(); // 
-
+                                double currentProgress = (row - 1) * 100 / (double) worksheet.Dimension.Rows;
+                                updateProgress(currentProgress);
                             }
                         }
                     }

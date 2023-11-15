@@ -20,16 +20,16 @@ namespace HundeKennel.ViewModels
     public class MainViewModel : INotifyPropertyChanged
     {
         
-        private int _progress;
-        public int Progress
+        private double _progress;
+        public double dbProgress
         {
-            get { return Progress; }
+            get { return _progress; }
             set
             {
                 if(_progress != value)
                 {
                     _progress = value;
-                    OnPropertyChanged(nameof(Progress));
+                    OnPropertyChanged(nameof(dbProgress));
                 }
             }
 
@@ -54,14 +54,17 @@ namespace HundeKennel.ViewModels
         public MainViewModel()
         {
             DBHelper.Import(UpdateProgress);
-            
 
-            
             // Property LicenseContext is set to NonCommercial to make it eligible for use.
         }
-        private void UpdateProgress(int progress)
+        private void UpdateProgress(double progress)
         {
-            Progress = progress;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                dbProgress = progress;
+            });
+            
+
         }
     }
 }
