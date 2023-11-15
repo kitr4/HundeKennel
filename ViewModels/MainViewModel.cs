@@ -18,7 +18,7 @@ namespace HundeKennel.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private void LogParsingError
+        
         private DogRepository dogRepo = new DogRepository();
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -87,6 +87,8 @@ namespace HundeKennel.ViewModels
                             // Set parameters based on your Excel columns
                             cmd.Parameters.Clear();
 
+                            string pedigree = worksheet.Cells[row, 2].Value?.ToString();
+
                             if (int.TryParse(worksheet.Cells[row, 1].Text, out int dogId))
                             {
                                 cmd.Parameters.AddWithValue("@DogId", dogId);
@@ -110,7 +112,6 @@ namespace HundeKennel.ViewModels
                             }
                             else
                             {
-                                string pedigree = worksheet.Cells[row, 11].Value?.ToString();
                                 LoggingHelper.LogParsingError("Count", pedigree);
                             }
 
@@ -120,7 +121,7 @@ namespace HundeKennel.ViewModels
                             }
                             else
                             {
-                                Console.WriteLine("Invalid date format for Born on Dog with pedigree: " + worksheet.Cells[row, 2].Text);
+                                LoggingHelper.LogParsingError("Born", pedigree);
                             } //e
 
                                 cmd.Parameters.AddWithValue("@HD", worksheet.Cells[row, 14].Value?.ToString());
@@ -130,7 +131,7 @@ namespace HundeKennel.ViewModels
                             }
                             else
                             {
-                                Console.WriteLine("You have not passed a AD with a numberformat on Dog with pedigree:" + worksheet.Cells[row, 2].Text);
+                                LoggingHelper.LogParsingError("AD", pedigree);
                             }
                             if (int.TryParse(worksheet.Cells[row, 15].Text, out int HZ))
                             {
@@ -138,7 +139,7 @@ namespace HundeKennel.ViewModels
                             }
                             else
                             {
-                                Console.WriteLine("You have not passed a HZ with a numberformat on Dog with pedigree:" + worksheet.Cells[row, 2].Text);
+                                LoggingHelper.LogParsingError("HZ", pedigree);
                             }
                             if (int.TryParse(worksheet.Cells[row, 16].Text, out int SP))
                             {
@@ -146,7 +147,7 @@ namespace HundeKennel.ViewModels
                             }
                             else
                             {
-                                Console.WriteLine("You have not passed a SP with a numberformat on Dog with pedigree:" + worksheet.Cells[row, 2].Text);
+                                LoggingHelper.LogParsingError("SP", pedigree);
                             }
 
                                 cmd.Parameters.AddWithValue("@Sex", worksheet.Cells[row, 19].Value?.ToString());
@@ -166,7 +167,7 @@ namespace HundeKennel.ViewModels
                             }
                             else
                             {
-                                Console.WriteLine("You have not passed a BreedingStatus with a numberformat 0 or 1 on Dog with pedigree:" + worksheet.Cells[row, 2].Text);
+                                LoggingHelper.LogParsingError("Breedingstatus", pedigree);
                             }
                             if (int.TryParse(worksheet.Cells[row, 24].Text, out int MB))
                             {
@@ -174,7 +175,7 @@ namespace HundeKennel.ViewModels
                             }
                             else
                             {
-                                Console.WriteLine("You have not passed a MB with a numberformat on Dog with pedigree:" + worksheet.Cells[row, 2].Text);
+                                LoggingHelper.LogParsingError("MB", pedigree);
                             }
                             cmd.Parameters.AddWithValue("@Image", worksheet.Cells[row, 25].Value?.ToString()); // INT
 

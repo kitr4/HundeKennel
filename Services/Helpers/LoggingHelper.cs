@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HundeKennel.Services.Helpers
 {
-public static class Logger
+public static class LoggingHelper
     {
         public static void LogParsingError(string columnName, string pedigree)
         {
