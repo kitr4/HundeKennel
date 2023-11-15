@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using HundeKennel.Models;
 using OfficeOpenXml;
 using System.Data;
+using Dapper;
 
 namespace HundeKennel.Services.Helpers
 {
@@ -32,10 +33,6 @@ namespace HundeKennel.Services.Helpers
             {
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-                // SSMS-path for used to establish connection with System.Data.SqlClient
-                // string connectionString = "Server=10.56.8.36;Database=DB_F23_32;User Id=DB_F23_USER_32;Password=OPENDB_32;";
-
-                // EXCEL-Filepath initiatialized as a string
                 String excelFilePath = "C:\\Users\\jeppe\\source\\repos\\HundeKennel\\Resources\\HundeData.xlsx";
 
                 // Establish connection to SSMS
@@ -147,10 +144,11 @@ namespace HundeKennel.Services.Helpers
             }); 
         } // END OF METHOD IMPORT
 
-        public async Task<IEnumerable<T>> LoadData<T, U>(string sql, U parameters)
+        public static async Task<IEnumerable<T>> LoadData<T, U>(string sql, U parameters)
         {
-            using IDbConnection conn = new SqlConnection(connectionString);
-            return await conn.QueryAsync<T>(sql, parameters, commandType: CommandType.StoredProcedure);
+            using SqlConnection connection = new SqlConnection(connectionString);
+
+            return await connection.QueryAsync<T>(sql, parameters, commandType: CommandType.StoredProcedure);
         }
 
     }
