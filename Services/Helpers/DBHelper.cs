@@ -15,7 +15,7 @@ namespace HundeKennel.Services.Helpers
     {
         public static void ClearDB(SqlConnection connection)
         {
-            string clear = "DELETE FROM dogs;"+"DELETE FROM owner_dog;"+"DELETE FROM owners";
+            string clear = "DELETE FROM dogs;"+"DELETE FROM owner_dog;"+"DELETE FROM owners;"+"DBCC CHECKIDENT('dogs', RESEED, 1);";
             using (SqlCommand ClearCommand = new SqlCommand(clear, connection))
             {
                 connection.Open();
