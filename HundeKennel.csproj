@@ -7,12 +7,4 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Views\Logo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Views\Logo.png" />
-  </ItemGroup>
-
 </Project>

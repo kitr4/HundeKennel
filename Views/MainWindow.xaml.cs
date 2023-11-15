@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using HundeKennel;
+using HundeKennel.ViewModels;
 
 namespace HundeKennel.Views
 {
@@ -21,9 +22,12 @@ namespace HundeKennel.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        public MainViewModel mvm = new MainViewModel();
+
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = mvm;
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
