@@ -12,5 +12,9 @@ public static class LoggingHelper
         {
             Console.WriteLine($"Invalid format for {columnName} on Dog with pedigree: {pedigree}");
         }
+        public static void InvalidColumnFill()
+        {
+
+        }
     }
 }

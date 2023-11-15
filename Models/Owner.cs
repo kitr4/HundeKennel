@@ -62,18 +62,6 @@ namespace HundeKennel.Models
             private set { _phone = value; }
         }
 
-        public string? Username
-        {
-            get { return _username; }
-            private set { _username = value; }
-        }
-
-        public string? Password
-        {
-            get { return _password; }
-            private set { _password = value; }
-        }
-
         public string? Url
         {
             get { return _url; }
@@ -86,7 +74,7 @@ namespace HundeKennel.Models
             private set { _ownedDogs = value; }
 
         }
-        public Owner(int ownerId, string? name, string? address, int zipcode, string? city, string? email, string? phone, string? username, string? password, string? url, List<Dog> ownedDogs)
+        public Owner(int ownerId, string? name, string? address, int zipcode, string? city, string? email, string? phone, string? url)
         {
             _ownerId = ownerId;
             _name = name;
@@ -95,10 +83,7 @@ namespace HundeKennel.Models
             _city = city;
             _email = email;
             _phone = phone;
-            _username = username;
-            _password = password;
             _url = url;
-            _ownedDogs = ownedDogs;
         }
     }
 }
