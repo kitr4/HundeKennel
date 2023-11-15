@@ -8,11 +8,14 @@ using System.Security.Cryptography;
 using System.Xml.Linq;
 using HundeKennel.Models;
 using OfficeOpenXml;
+using System.Data;
 
 namespace HundeKennel.Services.Helpers
 {
     public class DBHelper
     {
+        private static readonly string? connectionString = "Server=10.56.8.36;Database=DB_F23_32;User Id=DB_F23_USER_32;Password=OPENDB_32;";
+        
         public static void ClearDB(SqlConnection connection)
         {
             string clear = "DELETE FROM dogs;"+"DELETE FROM owner_dog;"+"DELETE FROM owners;"+"DBCC CHECKIDENT('dogs', RESEED, 1);";
@@ -27,10 +30,10 @@ namespace HundeKennel.Services.Helpers
         {
             await Task.Run(() =>
             {
-                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
                 // SSMS-path for used to establish connection with System.Data.SqlClient
-                string connectionString = "Server=10.56.8.36;Database=DB_F23_32;User Id=DB_F23_USER_32;Password=OPENDB_32;";
+                // string connectionString = "Server=10.56.8.36;Database=DB_F23_32;User Id=DB_F23_USER_32;Password=OPENDB_32;";
 
                 // EXCEL-Filepath initiatialized as a string
                 String excelFilePath = "C:\\Users\\jeppe\\source\\repos\\HundeKennel\\Resources\\HundeData.xlsx";
@@ -144,5 +147,14 @@ namespace HundeKennel.Services.Helpers
             }); 
         } // END OF METHOD IMPORT
 
+        public async Task<IEnumerable<T>> LoadData<T, U>(string sql, U parameters)
+        {
+            using IDbConnection conn = new SqlConnection(connectionString);
+            return await conn.QueryAsync<T>(sql, parameters, commandType: CommandType.StoredProcedure);
+        }
+
     }
+
+
 }
+
