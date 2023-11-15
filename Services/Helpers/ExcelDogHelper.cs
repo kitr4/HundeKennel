@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace HundeKennel.Services.Helpers
 {
     public class ExcelDogHelper
     {
+        
             public string? DogId { get; set; }
             public string? Pedigree { get; set; }
             public string? Chip { get; set; }
