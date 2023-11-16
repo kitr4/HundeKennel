@@ -36,6 +36,8 @@ namespace HundeKennel.ViewModels
         // ICommands
         public ICommand SearchCommand { get; private set; }
         public ICommand ChooseFileCommand { get; private set; }
+        public ICommand CreateDogCommand { get; private set; }
+
 
         // Backingfields
         private string searchText;
@@ -106,9 +108,10 @@ namespace HundeKennel.ViewModels
         // CONSTRUCTORS
         public MainViewModel()
         {
-            DBHelper.Import(UpdateProgress);
+            // DBHelper.Import(UpdateProgress);
             SearchCommand = new RelayCommand(ExecuteSearchCommand);
-            ChooseFileCommand = new RelayCommand(async () => await ChooseFile()); 
+            ChooseFileCommand = new RelayCommand(async () => await ChooseFile());
+            CreateDogCommand = new RelayCommand(ExecuteCreateDog);
             
 
         }
@@ -132,6 +135,11 @@ namespace HundeKennel.ViewModels
             }
 
         }
+        //public Dog ExecuteCreateDog() 
+        //{
+
+        //    return Dog;
+        //}
 
 
         // COMMANDS
@@ -149,9 +157,14 @@ namespace HundeKennel.ViewModels
                 IFilePickerService filePickerService = new FilePickerService(); // Instantiate the service here
                 string filePath = await filePickerService.PickAFileAsync();
                 SelectedFilePath = filePath;
-                // You can also assign the path to a string variable here or perform further operations
-            }
-     }
+                await DBHelper.ImportNew(filePath, UpdateProgress);
+                SelectedFilePath = "HEY";
+
+            // You can also assign the path to a string variable here or perform further operations
+        }
+
+
+    }
 
 }
 

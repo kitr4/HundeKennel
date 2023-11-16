@@ -10,18 +10,18 @@ using HundeKennel.Models;
 using OfficeOpenXml;
 using System.Data;
 using Dapper;
+using System.IO;
 
 namespace HundeKennel.Services.Helpers
 {
     public class DBHelper
     {
         private static readonly string? connectionString = "Server=10.56.8.36;Database=DB_F23_32;User Id=DB_F23_USER_32;Password=OPENDB_32;";
-        
 
         // Deletes all data in the tables: dogs, owners
         public static void ClearDB(SqlConnection connection)
         {
-            string clear = "DELETE FROM dogs;"+"DELETE FROM owners;"+"DBCC CHECKIDENT('dogs', RESEED, 1);";
+            string clear = "DELETE FROM dogs;" + "DELETE FROM owners;" + "DBCC CHECKIDENT('dogs', RESEED, 1);";
             using (SqlCommand ClearCommand = new SqlCommand(clear, connection))
             {
                 connection.Open();
@@ -84,10 +84,10 @@ namespace HundeKennel.Services.Helpers
                         // Prepare SQL command with parameters
                         using (SqlCommand cmd = new SqlCommand(sqlInsert, connection))
                         {
-                            
+
                             for (int row = 2; row <= rowCount; row++) // Assuming data starts from row 2 (excluding header)
                             {
-                                
+
                                 // Set parameters based on your Excel columns
                                 cmd.Parameters.Clear();
                                 byte[] image = Convert.FromBase64String(worksheet.Cells[row, 25].Text);
@@ -138,17 +138,147 @@ namespace HundeKennel.Services.Helpers
                                 cmd.Parameters.AddWithValue("@Image", doghelper.Image);
 
                                 cmd.ExecuteNonQuery(); // 
-                                double currentProgress = (row - 1) * 100 / (double) worksheet.Dimension.Rows;
+                                double currentProgress = (row - 1) * 100 / (double)worksheet.Dimension.Rows;
                                 updateProgress(currentProgress);
                             }
                         }
                     }
                 }
-            }); 
+            });
         } // END OF METHOD IMPORT
 
+        public static async Task ImportNew(string? FilePath, Action<double> updateProgress)
+        {
+            await Task.Run(() =>
+            {
 
-        // StoredProcedure method for loading data
+                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+
+
+                if (string.IsNullOrEmpty(FilePath) || Path.GetExtension(FilePath) != ".xlsx")
+                {
+                    // Handle cases where the FilePath is null, empty, or doesn't have the .xlsx extension
+                    return;
+                }
+
+                // Establish connection to SSMS
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    // Read data from Excel using EPPlus
+                    using (ExcelPackage package = new ExcelPackage(new System.IO.FileInfo(FilePath)))
+                    {
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+
+                        int rowCount = worksheet.Dimension.Rows;
+                        int colCount = worksheet.Dimension.Columns; // mulig unødvendigt, da vi måske kører et loop afhængig af hvor mange columns der skal bruges
+
+                        // Assuming your table in SSMS has columns with names similar to Excel columns
+                        string sqlCheckForExistingDog = @"SELECT * FROM dogs WHERE Pedigree = @Pedigree";
+
+                        string sqlInsert = "INSERT INTO dogs("
+                            + "Pedigree,"
+                            + "Chip,"
+                            + "Name,"
+                            + "Breeder,"
+                            + "DadId,"
+                            + "MomId,"
+                            + "DkkTitles,"
+                            + "Titles,"
+                            + "Count,"
+                            + "Born,"
+                            + "HD,"
+                            + "AD,"
+                            + "HZ,"
+                            + "SP,"
+                            + "Sex,"
+                            + "Color,"
+                            + "Dead,"
+                            + "AK,"
+                            + "BreedingStatus,"
+                            + "MB,"
+                            + "Image"
+                            + ") "
+                            + "VALUES ("
+                            + "@Pedigree, @Chip,@Name,@Breeder,@Dad,@Mom,@DkkTitles,@Titles,@Count,@Born,@HD,@AD,@HZ,@SP,@Sex,@Color,@Dead,@AK,@BreedingStatus,@MB,@Image)";
+
+                        // Prepare SQL command with parameters
+                        using (SqlCommand checkCmd = new SqlCommand(sqlCheckForExistingDog, connection))
+                        {
+                             using (SqlCommand cmd = new SqlCommand(sqlInsert, connection)) 
+                            {
+                                
+                                for (int row = 2; row <= rowCount; row++) // Assuming data starts from row 2 (excluding header)
+                                {
+                                    checkCmd.Parameters.Clear();
+                                    checkCmd.Parameters.AddWithValue("@Pedigree", worksheet.Cells[row, 2].Text);
+                                    
+                                    if (checkCmd.ExecuteScalar() == null)
+                                    {
+                                        cmd.Parameters.Clear();
+                                        byte[] image = Convert.FromBase64String(worksheet.Cells[row, 25].Text);
+                                        DogHelper doghelper = new DogHelper(
+                                            worksheet.Cells[row, 2].Text,
+                                            worksheet.Cells[row, 3].Text,
+                                            worksheet.Cells[row, 4].Text,
+                                            worksheet.Cells[row, 5].Text,
+                                            worksheet.Cells[row, 6].Text,
+                                            worksheet.Cells[row, 7].Text,
+                                            worksheet.Cells[row, 8].Text,
+                                            worksheet.Cells[row, 9].Text,
+                                            worksheet.Cells[row, 11].Text,
+                                            worksheet.Cells[row, 12].Text,
+                                            worksheet.Cells[row, 13].Text,
+                                            worksheet.Cells[row, 14].Text,
+                                            worksheet.Cells[row, 15].Text,
+                                            worksheet.Cells[row, 16].Text,
+                                            worksheet.Cells[row, 19].Text,
+                                            worksheet.Cells[row, 20].Text,
+                                            worksheet.Cells[row, 21].Text,
+                                            worksheet.Cells[row, 22].Text,
+                                            worksheet.Cells[row, 23].Text,
+                                            worksheet.Cells[row, 24].Text,
+                                            image);
+
+                                        // Data-integrity with Parameters
+                                        cmd.Parameters.AddWithValue("@Pedigree", doghelper.Pedigree);
+                                        cmd.Parameters.AddWithValue("@Chip", doghelper.Chip);
+                                        cmd.Parameters.AddWithValue("@Name", doghelper.Name);
+                                        cmd.Parameters.AddWithValue("@Breeder", doghelper.Breeder);
+                                        cmd.Parameters.AddWithValue("@Dad", doghelper.DadId);
+                                        cmd.Parameters.AddWithValue("@Mom", doghelper.MomId);
+                                        cmd.Parameters.AddWithValue("@DkkTitles", doghelper.DkkTitles);
+                                        cmd.Parameters.AddWithValue("@Titles", doghelper.Titles);
+                                        cmd.Parameters.AddWithValue("@Count", doghelper.Count);
+                                        cmd.Parameters.AddWithValue("@Born", doghelper.Born);
+                                        cmd.Parameters.AddWithValue("@HD", doghelper.HD);
+                                        cmd.Parameters.AddWithValue("@AD", doghelper.AD);
+                                        cmd.Parameters.AddWithValue("@HZ", doghelper.HZ);
+                                        cmd.Parameters.AddWithValue("@SP", doghelper.SP);
+                                        cmd.Parameters.AddWithValue("@Sex", doghelper.Sex);
+                                        cmd.Parameters.AddWithValue("@Color", doghelper.Color);
+                                        cmd.Parameters.AddWithValue("@Dead", doghelper.Dead);
+                                        cmd.Parameters.AddWithValue("@AK", doghelper.AK);
+                                        cmd.Parameters.AddWithValue("@BreedingStatus", doghelper.BreedingStatus);
+                                        cmd.Parameters.AddWithValue("@MB", doghelper.Mb);
+                                        cmd.Parameters.AddWithValue("@Image", doghelper.Image);
+
+                                        cmd.ExecuteNonQuery(); // 
+                                        double currentProgress = (row - 1) * 100 / (double)worksheet.Dimension.Rows;
+                                        updateProgress(currentProgress);
+                                    }
+                                    else
+                                    {
+                                        
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         public static async Task<IEnumerable<T>> LoadData<T, U>(string sql, U parameters)
         {
             using SqlConnection connection = new SqlConnection(connectionString);
@@ -156,8 +286,13 @@ namespace HundeKennel.Services.Helpers
             return await connection.QueryAsync<T>(sql, parameters, commandType: CommandType.StoredProcedure);
         }
 
-    }
+        public static void CheckIfDogExists()
+        {
+
+        }
+     }
 
 
 }
+
 
