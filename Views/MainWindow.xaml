@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HundeKennel.Views"
         mc:Ignorable="d"
-        Title="Heides hundekennel" Height="450" Width="800">
+        Title="Heidis hundekennel" Height="800" Width="1000"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Button 
             Content="Se stamtavle" 
@@ -21,8 +22,8 @@
             Height="50" Width="91"/>
         <Button 
             Content="DataImport fra Excel" 
-            HorizontalAlignment="Center" 
-            Margin="0,35,0,0" VerticalAlignment="Top" 
+            HorizontalAlignment="Left" 
+            Margin="817,55,0,0" VerticalAlignment="Top" 
             Height="50" 
             Width="92"/>
         <Button Content="Opdater/slet DB" 
@@ -33,25 +34,25 @@
                 Width="91"/>
         <Button Content="Søg hund" 
                 HorizontalAlignment="Left" 
-                Margin="290,167,0,0" 
+                Margin="456,303,0,0" 
                 VerticalAlignment="Top" 
                 Height="50" 
-                Width="91" 
+                Width="92" 
                 Command="{Binding SearchCommand}"/>
         <CheckBox 
             Content="Medtag døde" 
             HorizontalAlignment="Left" 
-            Margin="677,356,0,0" 
+            Margin="677,356,0,0"  
             VerticalAlignment="Top"/>
         <ListBox 
             d:ItemsSource="{d:SampleData ItemCount=5}" 
-            Margin="10,290,609,10"/>
-        
+            Margin="10,535,609,135"/>
+
         <TextBox HorizontalAlignment="Left" 
-                 Margin="210,131,0,0" 
+                 Margin="376,257,0,0" 
                  TextWrapping="Wrap" 
                  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
-                 VerticalAlignment="Top" Width="251" Height="19" 
+                 VerticalAlignment="Top" Width="252" Height="19" 
                  TextChanged="TextBox_TextChanged"/>
         <Image 
             HorizontalAlignment="Left" 
@@ -62,7 +63,7 @@
             Source="/Views/Logo.png" />
         <Slider 
             HorizontalAlignment="Left" 
-            Margin="12,167,0,0" 
+            Margin="870,10,0,0" 
             VerticalAlignment="Top" 
             Width="120" Background="#FF8A8FBD" 
             Value="{Binding dbProgress, Mode=TwoWay}" 
@@ -79,9 +80,9 @@
             Text="{Binding dbProgress}"/>
         <TextBlock 
             HorizontalAlignment="Left" 
-            Margin="422,357,0,0" 
+            Margin="418,354,0,0" 
             TextWrapping="Wrap" 
-            Text="{Binding SelectedDog.Name}" 
+            Text="{Binding SelectedDog.Dead}" 
             VerticalAlignment="Top"/>
 
     </Grid>
