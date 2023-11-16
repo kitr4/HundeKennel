@@ -35,7 +35,7 @@ namespace HundeKennel.ViewModels
 
         // ICommands
         public ICommand SearchCommand { get; private set; }
-
+        public ICommand ChooseFileCommand { get; private set; }
 
         // Backingfields
         private string searchText;
@@ -77,10 +77,30 @@ namespace HundeKennel.ViewModels
             }
         }
 
+        private string _selectedFilePath;
+
+        public string SelectedFilePath
+        {
+            get { return _selectedFilePath; }
+            set
+            {
+                if (_selectedFilePath != value)
+                {
+                    _selectedFilePath = value;
+                    OnPropertyChanged(nameof(SelectedFilePath));
+                }
+            }
+        }
+   
         public ObservableCollection<Dog>? Dogs { get; private set; }
 
         // Created Object-Properties
         public DataService data = new DataService();
+
+        public readonly IFilePickerService _filePickerService;
+
+        
+
 
 
         // CONSTRUCTORS
@@ -88,6 +108,8 @@ namespace HundeKennel.ViewModels
         {
             DBHelper.Import(UpdateProgress);
             SearchCommand = new RelayCommand(ExecuteSearchCommand);
+            ChooseFileCommand = new RelayCommand(async () => await ChooseFile()); 
+            
 
         }
         private void UpdateProgress(double progress)
@@ -120,12 +142,20 @@ namespace HundeKennel.ViewModels
             // Use the SearchText here (for example, just printing it for demonstration)
            
         }
-       
 
 
+            private async Task ChooseFile() 
+            {
+                IFilePickerService filePickerService = new FilePickerService(); // Instantiate the service here
+                string filePath = await filePickerService.PickAFileAsync();
+                SelectedFilePath = filePath;
+                // You can also assign the path to a string variable here or perform further operations
+            }
+     }
 
-    }
 }
+
+
         
     
 

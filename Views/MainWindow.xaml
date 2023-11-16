@@ -84,6 +84,8 @@
             TextWrapping="Wrap" 
             Text="{Binding SelectedDog.Dead}" 
             VerticalAlignment="Top"/>
+            <Button Content="Vælg fil til import" Command="{Binding ChooseFileCommand}" RenderTransformOrigin="0.502,0.473" Margin="0,0,934,746"/>
+            <TextBlock Text="{Binding SelectedFilePath}" Margin="0,10,0,0"/>
 
     </Grid>
 </Window>
