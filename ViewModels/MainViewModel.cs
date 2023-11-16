@@ -37,12 +37,20 @@ namespace HundeKennel.ViewModels
         public ICommand SearchCommand { get; private set; }
         public ICommand ChooseFileCommand { get; private set; }
         public ICommand CreateDogCommand { get; private set; }
+        public ICommand SearchMateCommand { get; set; }
 
 
         // Backingfields
         private string searchText;
         private double _progress;
         private Dog? _selectedDog;
+        public string? MateSex { get; set; }
+        public string? MateColor { get; set; }
+        public int? MateAge { get; set; }
+        public string? MateAD { get; set; }
+        public string? MateHD { get; set; }
+        public string? MateSP { get; set; }
+        public string? MateHZ { get; set; }
 
         // Properties with NotifyProperty on set
         public string SearchText
@@ -69,7 +77,11 @@ namespace HundeKennel.ViewModels
             }
 
         }
-        public Dog dogSaver { get; set; } = new Dog();
+
+        List<Dog> Dogs = new List<Dog>();
+        
+
+
 
         public Dog SelectedDog
         {
@@ -78,6 +90,15 @@ namespace HundeKennel.ViewModels
             {
                 _selectedDog = value;
                 OnPropertyChanged(nameof(SelectedDog));
+            }
+        }
+        public Dog RightDog
+        {
+            get { return RightDog; }
+            set
+            {
+                _selectedDog = value;
+                OnPropertyChanged(nameof(RightDog));
             }
         }
 
@@ -95,17 +116,13 @@ namespace HundeKennel.ViewModels
                 }
             }
         }
-   
-        public ObservableCollection<Dog>? Dogs { get; private set; }
+
+        // public ObservableCollection<Dog> DogsRight { get; private set; }
 
         // Created Object-Properties
         public DataService data = new DataService();
 
         public readonly IFilePickerService _filePickerService;
-
-        
-
-
 
         // CONSTRUCTORS
         public MainViewModel()
@@ -114,17 +131,19 @@ namespace HundeKennel.ViewModels
             SearchCommand = new RelayCommand(ExecuteSearchCommand);
             ChooseFileCommand = new RelayCommand(async () => await ChooseFile());
             CreateDogCommand = new RelayCommand(ExecuteCreateDog);
-            
-
-        }
+            SearchMateCommand = new RelayCommand(ExecuteFindMate);
+            // LOADER PIRAT Load();
+    }
 
         private void ExecuteCreateDog()
         {
-            createDog(dogSaver.Pedigree);
+            createDog();
         }
-        private void createDog(string? pedigree)
+        private void createDog()
+
         {
-            dogSaver.Pedigree = pedigree;
+            Dogs.Add(SelectedDog);
+            data.InsertDog(SelectedDog);
         }
 
         private void UpdateProgress(double progress)
@@ -135,7 +154,7 @@ namespace HundeKennel.ViewModels
             });
         }
         public async Task SearchDog(string pedigree)
-        { 
+        {
             var DogFound = await data.LoadDog(pedigree);
             if (DogFound != null && DogFound.Any())
             {
@@ -147,9 +166,76 @@ namespace HundeKennel.ViewModels
             }
 
         }
-       
 
+        // _________ PIRAT PEDITREE
+        //public async void Load()
+        //{
+        //    var tempDogs = data.LoadAllDogs();
+        //    foreach(var dog in tempDogs)
+        //    {
+        //        Dogs.Add(dog);
+        //    }
+        //}
 
+        //    public async void Load()
+        //{
+        //    var treeDogs = await data.LoadAllDogs();
+        //    int i = 0;
+        //    bool treeMade = false;
+        //    while (!treeMade)
+        //        foreach (var parentDog in treeDogs)
+        //        {
+        //            if (i == 0)
+        //            {
+        //                if (parentDog.Pedigree == SelectedDog.DadId)
+        //                {
+        //                    SelectedDog.DadTree.Add(parentDog);
+        //                    i++;
+        //                }
+        //            }
+
+        //            if (i == 1 && SelectedDog.DadTree[0].Pedigree == parentDog.Pedigree)
+        //            {
+        //                SelectedDog.DadTree.Add(parentDog);
+        //                i++;
+        //            }
+        //            if (i == 2 && SelectedDog.DadTree[1].Pedigree == parentDog.Pedigree)
+        //            {
+        //                SelectedDog.DadTree.Add(parentDog);
+        //                i++;
+        //            }
+        //            if (i == 3 && SelectedDog.DadTree[2].Pedigree == parentDog.Pedigree)
+        //            {
+        //                SelectedDog.DadTree.Add(parentDog);
+        //                i++;
+        //            }
+        //            if (i == 4 && SelectedDog.DadTree[3].Pedigree == parentDog.Pedigree)
+        //            {
+        //                SelectedDog.DadTree.Add(parentDog);
+        //                treeMade = true;
+        //            }
+        //        }
+        //}
+
+        private async void ExecuteFindMate()
+        {
+            await FindMate(this.MateSex, this.MateColor, this.MateAge, this.MateAD, this.MateHD, this.MateSP, this.MateHZ);
+        }
+        
+        public async Task FindMate(string? matesex, string? matecolor, int? mateage,string? matead, string? matehd, string? matesp, string? matehz)
+        {
+            var DogFound = await data.LoadMateDogs(matesex, matecolor, mateage, matead, matehd, matesp, matehz);
+            if (DogFound != null && DogFound.Any())
+            {
+                ObservableCollection<Dog> DogsRight = new ObservableCollection<Dog>();
+                foreach(Dog dog in DogFound)
+                {
+                    DogsRight.Add(dog);
+                }
+            }
+        }
+
+        
         // COMMANDS
 
         private async void ExecuteSearchCommand()
@@ -159,8 +245,7 @@ namespace HundeKennel.ViewModels
            
         }
 
-
-            private async Task ChooseFile() 
+        private async Task ChooseFile() 
             {
                 IFilePickerService filePickerService = new FilePickerService(); // Instantiate the service here
                 string filePath = await filePickerService.PickAFileAsync();
@@ -170,7 +255,6 @@ namespace HundeKennel.ViewModels
 
             // You can also assign the path to a string variable here or perform further operations
         }
-
 
     }
 

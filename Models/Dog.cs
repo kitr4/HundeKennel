@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +30,8 @@ namespace HundeKennel.Models
         private bool? _mb;
         private byte[]? _image;
         private Owner? _owner;
-        private List<Dog>? _pedigreeTree = new List<Dog>();
+        public ObservableCollection<Dog> DadTree = new ObservableCollection<Dog>();
+        public ObservableCollection<Dog> MomTree = new ObservableCollection<Dog>();
 
         // PROPERTIES
         public int? DogId
@@ -151,15 +153,12 @@ namespace HundeKennel.Models
             get => _owner; set => _owner = value;
         }
 
-        public List<Dog> PedigreeTree
-        {
-            get { return _pedigreeTree; }
-            set { _pedigreeTree = value; }
-        }
+        
         public Dog()
         {
 
         }
+
         //    public Dog
         //        (
         //        string? pedigree,

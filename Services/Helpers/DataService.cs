@@ -1,26 +1,82 @@
-﻿using HundeKennel.Models;
+﻿using Dapper;
+using HundeKennel.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 namespace HundeKennel.Services.Helpers
 {
     public class DataService
     {
+        private static readonly string? connectionString = "Server=10.56.8.36;Database=DB_F23_32;User Id=DB_F23_USER_32;Password=OPENDB_32;";
         // This query establishes the logic for a stored procedure-query
         public async Task<IEnumerable<Dog>> LoadDog(string pedigree)
         {
             return await DBHelper.LoadData<Dog, dynamic>("spSearchDog", new { Pedigree = pedigree });
         }
-
+        public string? MateSex { get; set; }
+        public string? MateColor { get; set; }
+        public int? MateAge { get; set; }
+        public string? MateAD { get; set; }
+        public string? MateHD { get; set; }
+        public string? MateSP { get; set; }
+        public string? MateHZ { get; set; }
         public async Task<IEnumerable<Dog>> LoadAllDogs()
         {
-            return await DBHelper.LoadData<Dog, dynamic>("spGetAllDogs", new { });
+            return await DBHelper.LoadData<Dog, dynamic>("spGetAllDogs", new {  });
+        }
+        
+
+
+        public async Task<IEnumerable<Dog>> LoadMateDogs(string? sex, string? color, int? mateage, string matead, string matehd, string matesp, string matehz)
+        {
+            return await DBHelper.LoadData<Dog, dynamic>("spFindMate", new 
+            { 
+                Sex = sex,
+                Color = color,
+                // MateAge = mateage,
+                MateAD = matead,
+                MateHD = matehd,
+                MateSP = matesp,
+                MateHZ = matehz
+            });
         }
 
+        public Task InsertDog(Dog dog) =>
+            SaveData("spInsertDog", new
+            {
+                dog.Pedigree,
+                dog.HD,
+                dog.HZ,
+                dog.AD,
+                dog.Name,
+                dog.SP,
+                dog.Born,
+                dog.BreedingStatus,
+                dog.Chip,
+                dog.Color,
+                dog.DadId,
+                dog.Dead,
+                dog.Mb,
+                dog.MomId,
+                dog.Image,
+                dog.Sex,
+                dog.DkkTitles,
+                dog.Titles
+            });
+
+        public async Task SaveData<T>(string sql, T parameters)
+        {
+            using SqlConnection conn = new SqlConnection(connectionString);
+
+            await conn.ExecuteAsync(sql, parameters, commandType: CommandType.StoredProcedure);
+        }
 
         public static bool InsertDogIntoDatabase(Dog dog, SqlConnection connection)
         {
