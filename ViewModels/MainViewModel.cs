@@ -79,10 +79,7 @@ namespace HundeKennel.ViewModels
         }
 
         List<Dog> Dogs = new List<Dog>();
-        
-
-
-
+  
         public Dog SelectedDog
         {
             get { return _selectedDog; }
@@ -132,6 +129,8 @@ namespace HundeKennel.ViewModels
             ChooseFileCommand = new RelayCommand(async () => await ChooseFile());
             CreateDogCommand = new RelayCommand(ExecuteCreateDog);
             SearchMateCommand = new RelayCommand(ExecuteFindMate);
+
+
             // LOADER PIRAT Load();
     }
 
@@ -144,6 +143,45 @@ namespace HundeKennel.ViewModels
         {
             Dogs.Add(SelectedDog);
             data.InsertDog(SelectedDog);
+            SearchText = "Søg på pedigree";
+        }
+
+        public async Task<ObservableCollection<Dog>> GetPedigreeTree(Dog dog, int generation, int currentGeneration = 0)
+        {
+            // Stop condition - If there is no dogs left , or the current generation is higher than the older
+            if (dog == null || currentGeneration >= generation)
+            {
+                SelectedDog.Name = "Hey";
+                return SelectedDog.PedigreeTree;
+            }
+            
+            Dog dad = new Dog();
+            Dog mom = new Dog();
+            var DadFound = await data.LoadDog(dog.DadId);
+            if (DadFound.Any())
+            {
+                dad = DadFound.First();
+                
+            }
+            var MomFound = await data.LoadDog(dog.MomId);
+            if (MomFound.Any())
+            {
+                mom = MomFound.First();
+            }
+            
+            if (dad != null)
+            {
+                SelectedDog.pedigreeTree.Add(dad);
+                await GetPedigreeTree(dad,generation, currentGeneration + 1);
+            }
+            // Den viser "Collection" i en textbox ved kørsel. DEN VISER IKKE LISTEN AAAAAAARGHHHHHH
+            if (mom != null)
+            {
+                SelectedDog.pedigreeTree.Add(mom);
+                await GetPedigreeTree(mom, generation, currentGeneration + 1);
+            }
+
+            return SelectedDog.PedigreeTree;
         }
 
         private void UpdateProgress(double progress)
@@ -155,10 +193,15 @@ namespace HundeKennel.ViewModels
         }
         public async Task SearchDog(string pedigree)
         {
+           
+           
             var DogFound = await data.LoadDog(pedigree);
             if (DogFound != null && DogFound.Any())
             {
-                SelectedDog = DogFound.First(); // Accessing the first element                                  // Now you can use SelectedDog as needed
+                SelectedDog = DogFound.First(); // Accessing the first elemen
+                                              // 
+                await GetPedigreeTree(SelectedDog,  4);// Now you can use SelectedDog as needed
+                SelectedDog.Name = "Hej";
             }
             else
             {

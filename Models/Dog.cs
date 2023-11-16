@@ -1,14 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HundeKennel.Models
+namespace HundeKennel.Models 
 {
-    public class Dog
+    public class Dog : INotifyPropertyChanged
     {
+
+        //INotify interface: 
+    public event PropertyChangedEventHandler? PropertyChanged;
+    protected void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+    
         // BACKINGFIELDS
         private int? _dogId;
         private string? _pedigree;
@@ -30,8 +39,24 @@ namespace HundeKennel.Models
         private bool? _mb;
         private byte[]? _image;
         private Owner? _owner;
-        public ObservableCollection<Dog> DadTree = new ObservableCollection<Dog>();
-        public ObservableCollection<Dog> MomTree = new ObservableCollection<Dog>();
+
+
+        public ObservableCollection<Dog> pedigreeTree { get; set; } = new ObservableCollection<Dog>()
+        {
+            new Dog { Name = "Buddy" },
+            new Dog { Name = "Max" }
+        };
+        public ObservableCollection<Dog> PedigreeTree
+        {
+           get { return pedigreeTree; }
+            set
+            {
+                pedigreeTree = value;
+                OnPropertyChanged(nameof(PedigreeTree));
+            }
+        }
+    
+
 
         // PROPERTIES
         public int? DogId
@@ -55,7 +80,7 @@ namespace HundeKennel.Models
         public string? Name
         {
             get { return _name; }
-            private set { _name = value; }
+            set { _name = value; }
         }
 
         public string? DadId
@@ -152,8 +177,6 @@ namespace HundeKennel.Models
         {
             get => _owner; set => _owner = value;
         }
-
-        
         public Dog()
         {
 

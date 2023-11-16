@@ -29,8 +29,6 @@ namespace HundeKennel.Services.Helpers
             }
         }
 
-
-
         // Imports from local excelfile to SSMS via DogHelper
         public static async Task Import(Action<double> updateProgress)
         {

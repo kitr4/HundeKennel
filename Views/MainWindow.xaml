@@ -51,9 +51,9 @@
         <TextBox HorizontalAlignment="Left" 
                  Margin="376,257,0,0" 
                  TextWrapping="Wrap" 
-                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay }" 
                  VerticalAlignment="Top" Width="252" Height="19" 
-                 TextChanged="TextBox_TextChanged"/>
+                 />
         <Image 
             HorizontalAlignment="Left" 
             Height="91" 
@@ -77,15 +77,14 @@
             VerticalAlignment="Center" 
             Height="34" 
             Width="66" 
-            Text="{Binding dbProgress}"/>
+            Text="{Binding SelectedDog.PedigreeTree}"/>
         <TextBlock 
             HorizontalAlignment="Left" 
             Margin="418,354,0,0" 
             TextWrapping="Wrap" 
-            Text="{Binding SelectedDog.Dead}" 
+            Text="{Binding SelectedDog.Name}" 
             VerticalAlignment="Top"/>
             <Button Content="Vælg fil til import" Command="{Binding ChooseFileCommand}" RenderTransformOrigin="0.502,0.473" Margin="0,0,934,746"/>
-            <TextBlock Text="{Binding SelectedFilePath}" Margin="0,10,0,0"/>
         <TextBox
             HorizontalAlignment="Left" 
             Margin="56,126,0,0" 
@@ -93,7 +92,9 @@
             Text="{Binding dogSaver.Pedigree, UpdateSourceTrigger=LostFocus}" 
             VerticalAlignment="Top" 
             Width="120" 
-            TextChanged="TextBox_TextChanged_1"/>
-
+           />
+        <ListBox d:ItemsSource="{Binding SelectedDog.PedigreeTree, 
+            UpdateSourceTrigger=PropertyChanged,
+            Mode=TwoWay}" Margin="432,535,383,101"/>
     </Grid>
 </Window>

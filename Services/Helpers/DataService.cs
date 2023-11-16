@@ -31,8 +31,11 @@ namespace HundeKennel.Services.Helpers
         {
             return await DBHelper.LoadData<Dog, dynamic>("spGetAllDogs", new {  });
         }
-        
 
+        public async Task<IEnumerable<Dog>> FindDogByPedigree(Dog dog, int generation, int currentGeneration = 0)
+        {
+            return await DBHelper.LoadData<Dog, dynamic>("spSearchDog", new { Pedigree = dog.Pedigree });
+        }
 
         public async Task<IEnumerable<Dog>> LoadMateDogs(string? sex, string? color, int? mateage, string matead, string matehd, string matesp, string matehz)
         {
