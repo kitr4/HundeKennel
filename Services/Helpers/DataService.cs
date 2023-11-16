@@ -9,9 +9,10 @@ namespace HundeKennel.Services.Helpers
 {
     public class DataService
     {
+        // This query establishes the logic for a stored procedure-query
         public async Task<IEnumerable<Dog>> LoadDog(string pedigree)
         {
-            return await DBHelper.LoadData<Dog, dynamic>("spRetrieveDog", new { Pedigree = pedigree });
+            return await DBHelper.LoadData<Dog, dynamic>("spSearchDog", new { Pedigree = pedigree });
         }
     }
 }

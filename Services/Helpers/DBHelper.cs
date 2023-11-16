@@ -19,7 +19,7 @@ namespace HundeKennel.Services.Helpers
         
         public static void ClearDB(SqlConnection connection)
         {
-            string clear = "DELETE FROM dogs;"+"DELETE FROM owner_dog;"+"DELETE FROM owners;"+"DBCC CHECKIDENT('dogs', RESEED, 1);";
+            string clear = "DELETE FROM dogs;"+"DELETE FROM owners;"+"DBCC CHECKIDENT('dogs', RESEED, 1);";
             using (SqlCommand ClearCommand = new SqlCommand(clear, connection))
             {
                 connection.Open();
@@ -144,6 +144,8 @@ namespace HundeKennel.Services.Helpers
             }); 
         } // END OF METHOD IMPORT
 
+
+        // StoredProcedure method for loading data
         public static async Task<IEnumerable<T>> LoadData<T, U>(string sql, U parameters)
         {
             using SqlConnection connection = new SqlConnection(connectionString);

@@ -11,6 +11,9 @@ using OfficeOpenXml;
 using HundeKennel.Services.Helpers;
 using System.Windows.Data;
 using System.Windows.Markup;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System.Windows.Input;
 
 
 //tvivlsspørgsmål / diskussion
@@ -21,14 +24,42 @@ namespace HundeKennel.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        public DataService data;
+
+        //INotify interface: 
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+        // ICommands
+        public ICommand SearchCommand { get; private set; }
+
+
+        // Backingfields
+        private string searchText;
         private double _progress;
+        private Dog? _selectedDog;
+
+        // Properties with NotifyProperty on set
+        public string SearchText
+        {
+            get => searchText;
+            set
+            {
+                searchText = value;
+                // Notify property change to update binding in the TextBox
+                // This assumes you have implemented INotifyPropertyChanged
+                OnPropertyChanged(nameof(SearchText));
+            }
+        }
         public double dbProgress
         {
             get { return _progress; }
             set
             {
-                if(_progress != value)
+                if (_progress != value)
                 {
                     _progress = value;
                     OnPropertyChanged(nameof(dbProgress));
@@ -36,7 +67,6 @@ namespace HundeKennel.ViewModels
             }
 
         }
-        private Dog? _selectedDog;
         public Dog SelectedDog
         {
             get { return _selectedDog; }
@@ -47,21 +77,17 @@ namespace HundeKennel.ViewModels
             }
         }
 
-
-        //INotify interface: 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        // Interface ended
         public ObservableCollection<Dog>? Dogs { get; private set; }
-        
+
+        // Created Object-Properties
+        public DataService data = new DataService();
+
 
         // CONSTRUCTORS
         public MainViewModel()
         {
             DBHelper.Import(UpdateProgress);
+            SearchCommand = new RelayCommand(ExecuteSearchCommand);
 
         }
         private void UpdateProgress(double progress)
@@ -82,7 +108,21 @@ namespace HundeKennel.ViewModels
             {
                 // Handle case when no dogs are found
             }
+
         }
+
+
+        // COMMANDS
+
+        private async void ExecuteSearchCommand()
+        {
+             await SearchDog(SearchText);
+            // Use the SearchText here (for example, just printing it for demonstration)
+           
+        }
+       
+
+
 
     }
 }

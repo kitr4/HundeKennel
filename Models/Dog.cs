@@ -9,7 +9,7 @@ namespace HundeKennel.Models
     public class Dog
     {
         // BACKINGFIELDS
-        private int _dogId;
+        private int? _dogId;
         private string? _pedigree;
         private string? _chip;
         private string? _name;
@@ -28,11 +28,11 @@ namespace HundeKennel.Models
         private bool _breedingStatus;
         private bool _mb;
         private byte[]? _image;
-        private Owner _owner;
-        private List<Dog> _pedigreeTree = new List<Dog>();
+        private Owner? _owner;
+        private List<Dog>? _pedigreeTree = new List<Dog>();
 
         // PROPERTIES
-        public int DogId
+        public int? DogId
         {
             get { return _dogId; }
             private set { _dogId = value; }
@@ -147,7 +147,8 @@ namespace HundeKennel.Models
         }
 
         public Owner owner
-        { get => _owner; set => _owner = value; 
+        {
+            get => _owner; set => _owner = value;
         }
 
         public List<Dog> PedigreeTree
@@ -155,52 +156,73 @@ namespace HundeKennel.Models
             get { return _pedigreeTree; }
             set { _pedigreeTree = value; }
         }
-        public Dog
-            (
-            int dogId,
-            string? pedigree,
-            string? chip,
-            string? name,
-            string? dadId,
-            string? momId,
-            string? dkkTitles,
-            string? titles,
-            DateTime born,
-            string? hd,
-            string? ad,
-            string? hz,
-            string? sp,
-            char? sex,
-            string? color,
-            bool dead,
-            bool breedingStatus,
-            bool mb,
-            byte[]? image,
-            Owner owner,
-            List<Dog> pedigreeTree
-            )
-        {
-            _dogId = dogId;
-            _pedigree = pedigree;
-            _chip = chip;
-            _name = name;
-            _dadId = dadId;
-            _momId = momId;
-            _dkkTitles = dkkTitles;
-            _titles = titles;
-            _born = born;
-            _hd = hd;
-            _ad = ad;
-            _hz = hz;
-            _sp = sp;
-            _sex = sex;
-            _color = color;
-            _dead = dead;
-            _breedingStatus = breedingStatus;
-            _mb = mb;
-            _image = image;
-            _owner = owner;
-            _pedigreeTree = pedigreeTree;
-        }
+        //    public Dog
+        //        (
+        //        string? pedigree,
+        //        string? chip,
+        //        string? name,
+        //        string? dadId,
+        //        string? momId,
+        //        string? dkkTitles,
+        //        string? titles,
+        //        DateTime born,
+        //        string? hd,
+        //        string? ad,
+        //        string? hz,
+        //        string? sp,
+        //        char? sex,
+        //        string? color,
+        //        bool dead,
+        //        bool breedingStatus,
+        //        bool mb,
+        //        byte[]? image,
+        //        Owner owner,
+        //        List<Dog> pedigreeTree
+        //        )
+        //    {
+        //        _pedigree = pedigree;
+        //        _chip = chip;
+        //        _name = name;
+        //        _dadId = dadId;
+        //        _momId = momId;
+        //        _dkkTitles = dkkTitles;
+        //        _titles = titles;
+        //        _born = born;
+        //        _hd = hd;
+        //        _ad = ad;
+        //        _hz = hz;
+        //        _sp = sp;
+        //        _sex = sex;
+        //        _color = color;
+        //        _dead = dead;
+        //        _breedingStatus = breedingStatus;
+        //        _mb = mb;
+        //        _image = image;
+        //        _owner = owner;
+        //        _pedigreeTree = pedigreeTree;
+        //    }
+
+        //    public Dog(int dogId, string? pedigree, string? chip, string? name, string? dadId, string? momId, string? dkkTitles, string? titles, DateTime born, string? hD, string? aD, string? hZ, string? sP, char? sex, string? color, bool dead, bool breedingStatus, bool mb, byte[]? image)
+        //    {
+        //        Pedigree = pedigree;
+        //        Chip = chip;
+        //        Name = name;
+        //        DadId = dadId;
+        //        MomId = momId;
+        //        DkkTitles = dkkTitles;
+        //        Titles = titles;
+        //        Born = born;
+        //        HD = hD;
+        //        AD = aD;
+        //        HZ = hZ;
+        //        SP = sP;
+        //        Sex = sex;
+        //        Color = color;
+        //        Dead = dead;
+        //        BreedingStatus = breedingStatus;
+        //        Mb = mb;
+        //        Image = image;
+        //    }
+        //}
     }
 }
