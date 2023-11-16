@@ -30,9 +30,6 @@ namespace HundeKennel.Views
             DataContext = mvm;
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            
-        }
+      
     }
 }

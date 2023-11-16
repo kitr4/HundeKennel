@@ -24,9 +24,9 @@ namespace HundeKennel.Models
         private string? _sp;
         private char? _sex;
         private string? _color;
-        private bool _dead;
-        private bool _breedingStatus;
-        private bool _mb;
+        private bool? _dead;
+        private bool? _breedingStatus;
+        private bool? _mb;
         private byte[]? _image;
         private Owner? _owner;
         private List<Dog>? _pedigreeTree = new List<Dog>();
@@ -41,7 +41,7 @@ namespace HundeKennel.Models
         public string? Pedigree
         {
             get { return _pedigree; }
-            private set { _pedigree = value; }
+            set { _pedigree = value; }
         }
 
         public string? Chip
@@ -122,19 +122,19 @@ namespace HundeKennel.Models
             private set { _color = value; }
         }
 
-        public bool Dead
+        public bool? Dead
         {
             get { return _dead; }
             private set { _dead = value; }
         }
 
-        public bool BreedingStatus
+        public bool? BreedingStatus
         {
             get { return _breedingStatus; }
             private set { _breedingStatus = value; }
         }
 
-        public bool Mb
+        public bool? Mb
         {
             get { return _mb; }
             private set { _mb = value; }
@@ -155,6 +155,10 @@ namespace HundeKennel.Models
         {
             get { return _pedigreeTree; }
             set { _pedigreeTree = value; }
+        }
+        public Dog()
+        {
+
         }
         //    public Dog
         //        (

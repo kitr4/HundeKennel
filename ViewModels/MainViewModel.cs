@@ -69,6 +69,8 @@ namespace HundeKennel.ViewModels
             }
 
         }
+        public Dog dogSaver { get; set; } = new Dog();
+
         public Dog SelectedDog
         {
             get { return _selectedDog; }
@@ -115,6 +117,16 @@ namespace HundeKennel.ViewModels
             
 
         }
+
+        private void ExecuteCreateDog()
+        {
+            createDog(dogSaver.Pedigree);
+        }
+        private void createDog(string? pedigree)
+        {
+            dogSaver.Pedigree = pedigree;
+        }
+
         private void UpdateProgress(double progress)
         {
             App.Current.Dispatcher.Invoke(() =>
@@ -135,11 +147,7 @@ namespace HundeKennel.ViewModels
             }
 
         }
-        //public Dog ExecuteCreateDog() 
-        //{
-
-        //    return Dog;
-        //}
+       
 
 
         // COMMANDS
