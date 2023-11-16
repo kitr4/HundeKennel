@@ -17,6 +17,8 @@ namespace HundeKennel.Services.Helpers
     {
         private static readonly string? connectionString = "Server=10.56.8.36;Database=DB_F23_32;User Id=DB_F23_USER_32;Password=OPENDB_32;";
         
+
+        // Deletes all data in the tables: dogs, owners
         public static void ClearDB(SqlConnection connection)
         {
             string clear = "DELETE FROM dogs;"+"DELETE FROM owners;"+"DBCC CHECKIDENT('dogs', RESEED, 1);";
@@ -27,6 +29,7 @@ namespace HundeKennel.Services.Helpers
             }
         }
 
+        // Imports from local excelfile to SSMS via DogHelper
         public static async Task Import(Action<double> updateProgress)
         {
             await Task.Run(() =>
