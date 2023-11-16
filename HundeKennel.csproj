@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Dapper" Version="2.1.21" />
     <PackageReference Include="EPPlus" Version="7.0.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
